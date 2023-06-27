@@ -13,7 +13,19 @@ abstract class Character {
       required this.defence,
       required this.magicResistance});
 
-  sayHello() {
+  factory Character.fromClassName(String className, String charName) {
+    className = className.trim();
+    switch (className) {
+      case 'wizard':
+        return Wizard(name: charName);
+      case 'fighter':
+        return Fighter(name: charName);
+      default:
+        throw Exception("Unknown class name");
+    }
+  }
+
+  void sayHello() {
     print("Bonjour, mon nom est ${this.name}");
   }
 }
@@ -28,6 +40,11 @@ class Wizard extends Character {
       super.defence = 10,
       super.magicResistance = 15,
       this.magicStrength = 17});
+
+  @override
+  void sayHello() {
+    print("Bonjour je suis un magicien ${this.name}");
+  }
 }
 
 class Fighter extends Character {
@@ -38,19 +55,8 @@ class Fighter extends Character {
       super.defence = 15,
       super.magicResistance = 5});
 
-  attackWithSword() {
+  void attackWithSword() {
     print("${this.name} attaque avec une épée !");
-  }
-}
-
-characterFactory(className, charName) {
-  switch (className) {
-    case 'wizard':
-      return Wizard(name: charName);
-    case 'fighter':
-      return Fighter(name: charName);
-    default:
-      return null;
   }
 }
 
@@ -67,15 +73,19 @@ main() {
   //   className = stdin.readLineSync();
   // }
 
-  Wizard wizard = characterFactory('wizard', 'Albus');
-
+  Character wizard = Character.fromClassName('wizard', "Albus");
+  
   print(wizard.name);
   print(wizard.healthPoints);
   print(wizard.strength);
-  print(wizard.magicStrength);
+  if (wizard is Wizard) {
+    print(wizard.magicStrength);
+  }
 
-  Fighter fighter = characterFactory('fighter', 'Izidor');
+  Character fighter = Character.fromClassName('fighter', 'Izidor');
 
   fighter.sayHello();
-  fighter.attackWithSword();
+  if (fighter is Fighter) {
+    fighter.attackWithSword();
+  }
 }
